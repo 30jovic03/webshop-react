@@ -15,12 +15,32 @@ interface MainMenuProperties {
   items: MainMenuItem[];
 }
 
+interface MainMenuState {
+  items: MainMenuItem[];
+}
+
 export class MainMenu extends React.Component<MainMenuProperties> {
+  state: MainMenuState;
+
+  constructor(props: Readonly<MainMenuProperties>) {
+    super(props);
+
+    this.state = {
+      items: props.items,
+    };
+  }
+
+  public setItems(items: MainMenuItem[]) {
+    this.setState({
+      items
+    });
+  }
+
   render() {
     return (
       <Container>
         <Nav variant="tabs">
-          {this.props.items.map(this.makeNavLink)}
+          { this.state.items.map(this.makeNavLink) }
         </Nav>
       </Container>
     )
