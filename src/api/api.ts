@@ -1,6 +1,5 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { ApiConfig } from '../config/api.config';
-import { rejects } from 'assert';
 
 export default function api(
   path: string,
@@ -14,7 +13,7 @@ export default function api(
       baseURL: ApiConfig.API_URL,
       data: JSON.stringify(body),
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': getToken(),
       },
     };
@@ -51,7 +50,7 @@ export default function api(
   });
 }
 
-interface ApiResponse {
+export interface ApiResponse {
   status: 'ok' | 'error' | 'login';
   data: any;
 }
@@ -69,7 +68,6 @@ async function responseHandler(
 
     return resolve(response);
   }
-
   
   const response: ApiResponse = {
       status: 'ok',
