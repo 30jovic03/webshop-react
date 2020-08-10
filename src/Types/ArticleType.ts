@@ -1,8 +1,8 @@
 export default class ArticleType {
-  articleID?: number;
+  articleId?: number;
   name?: string;
   excerpt?: string;
-  discription?: string;
+  description?: string;
   imageUrl?: string;
   price?: number;
 }
