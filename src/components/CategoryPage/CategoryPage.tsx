@@ -27,7 +27,16 @@ interface CategoryPageState {
     priceMinimum: number;
     priceMaximum: number;
     order: "name asc" | "name desc" | "price asc" | "price desc";
+    selectedFeatures: {
+      featureId: number;
+      value: string;
+    }[];
   };
+  features: {
+    featureId: number;
+    name: string;
+    values: string[];
+  }[];
 }
 
 interface CategoryDto {
@@ -63,8 +72,18 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
         priceMinimum: 0.01,
         priceMaximum: 100000,
         order: "price asc",
+        selectedFeatures: [],
       },
+      features: [],
     };
+  }
+
+  private setFeatures(features: any) {
+    const newState = Object.assign(this.state, {
+      features: features,
+    });
+
+    this.setState(newState);
   }
 
   private setLogginState(isLoggedIn: boolean) {
@@ -178,6 +197,8 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
           </Form.Control>
         </Form.Group>
 
+        { this.state.features.map(this.printFeatureFilterComponent, this) }
+
         <Form.Group>
           <Button variant="primary" block onClick={ () => this.applyFilters() }>
             <FontAwesomeIcon icon={ faSearch } /> Search
@@ -218,6 +239,62 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
   private setNewFilter(newFilter: any) {
     this.setState(Object.assign(this.state, {
       filter: newFilter,
+    }));
+  }
+
+  private printFeatureFilterComponent(feature: {
+    featureId: number; name: string; values: string[]; }) {
+    return (
+      <Form.Group>
+        <Form.Label><strong>{ feature.name }</strong></Form.Label>
+        { feature.values.map(value => this.printFeatureFilterCheckBox(feature, value), this) }
+      </Form.Group>
+    );
+  }
+
+  private printFeatureFilterCheckBox(feature: any, value: string) {
+    return (
+      <Form.Check type="checkbox" label={ value } 
+                  value={ value } 
+                  data-feature-id={ feature.featureId }
+                  onChange={ (event: any) => this.featureFilterChanged(event as any) }
+                  />
+    )
+  }
+
+  private featureFilterChanged(event :React.ChangeEvent<HTMLInputElement>) {
+    const featureId = Number(event.target.dataset.featureId);
+    const value = event.target.value;
+
+    (event.target.checked) ? 
+      this.addFeatureFilterValue(featureId, value) : 
+      this.removeFeatureFilterValue(featureId, value)
+  }
+
+  private addFeatureFilterValue(featureId: number, value: string) {
+    const newSelectedFeatures = [ ... this.state.filters.selectedFeatures ];
+
+    newSelectedFeatures.push({
+      featureId: featureId,
+      value: value,
+    });
+
+    this.setSelectedFeatures(newSelectedFeatures);
+  }
+
+  private removeFeatureFilterValue(featureId: number, value: string) {
+    const newSelectedFeatures = this.state.filters.selectedFeatures.filter(record => {
+      return !(record.featureId === featureId && record.value === value);
+    });
+
+    this.setSelectedFeatures(newSelectedFeatures);
+  }
+
+  private setSelectedFeatures(newSelectedFeatures: any) {
+    this.setState(Object.assign(this.state, {
+      filters: Object.assign(this.state.filters, {
+        selectedFeatures: newSelectedFeatures,
+      })
     }));
   }
 
@@ -350,12 +427,36 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
     const orderBy = orderParts[0];
     const orderDirection = orderParts[1].toUpperCase();
 
+    const featureFilters: any[] = [];
+
+    for (const item of this.state.filters.selectedFeatures) {
+      let found = false;
+      let foundRef = null;
+
+      for (const featureFilter of featureFilters) {
+        if (featureFilter.featureId === item.featureId) {
+          found = true;
+          foundRef = featureFilter;
+          break;
+        }
+      }
+
+      if (!found) {
+        featureFilters.push({
+          featureId: item.featureId,
+          values: [ item.value ],
+        });
+      } else {
+        foundRef.values.push(item.value);
+      }
+    }
+
     api('api/article/search/', 'post', {
       categoryId: Number(this.props.match.params.cId),
       keywords: this.state.filters.keywords,
       priceMin: this.state.filters.priceMinimum,
       priceMax: this.state.filters.priceMaximum,
-      features: [ ],
+      features: featureFilters,
       orderBy: orderBy,
       orderDirection: orderDirection,
     })
@@ -397,6 +498,23 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
       });
 
       this.setArticles(articles);
+    });
+
+    this.getFeatures();
+  }
+
+  getFeatures() {
+    api('api/features/values/' + this.props.match.params.cId, 'get', {})
+    .then((res: ApiResponse) => {
+      if (res.status === 'login') {
+        return this.setLogginState(false);
+      }
+
+      if (res.status === 'error') {
+        return this.setMessage('Request error. Please try to refresh the page.');
+      }
+
+      this.setFeatures(res.data.features);
     });
   }
 }
