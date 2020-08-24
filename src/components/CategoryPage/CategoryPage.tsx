@@ -6,7 +6,6 @@ import CategoryType from '../../Types/CategoryType';
 import api, { ApiResponse } from '../../api/api';
 import ArticleType from '../../Types/ArticleType';
 import { Redirect, Link } from 'react-router-dom';
-import { ApiConfig } from '../../config/api.config';
 import SingleArticlePreview from '../SingleArticlePreview/SingleArticlePreview';
 
 interface CategoryPageProperties {
@@ -273,7 +272,7 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
   }
 
   private addFeatureFilterValue(featureId: number, value: string) {
-    const newSelectedFeatures = [ ... this.state.filters.selectedFeatures ];
+    const newSelectedFeatures = [ ...this.state.filters.selectedFeatures ];
 
     newSelectedFeatures.push({
       featureId: featureId,

@@ -6,7 +6,6 @@ import { Container, Card, Table, Modal, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import CartType from '../../Types/CartType';
-import ArticleType from '../../Types/ArticleType';
 
 interface OrdersPageState {
   isUserLoggedIn: boolean;
