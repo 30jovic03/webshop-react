@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CategoryType from '../../Types/CategoryType';
 import { Redirect, Link } from 'react-router-dom';
 import api, { ApiResponse } from '../../api/api';
+import RoledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 interface HomePageState {
   isUserLoggedIn: boolean;
@@ -74,12 +75,14 @@ class HomePage extends React.Component {
   render() {
     if (this.state.isUserLoggedIn === false) {
       return (
-        <Redirect to="user/login/" />
+        <Redirect to="/user/login/" />
       );
     }
 
     return (
       <Container>
+        <RoledMainMenu role='user' />
+
         <Card>
           <Card.Body>
             <Card.Title>
