@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, Card } from 'react-bootstrap';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Redirect } from 'react-router-dom';
-import api, { ApiResponse } from '../../api/api';
+import { Redirect, Link } from 'react-router-dom';
+import api, { ApiResponse, getIdentity } from '../../api/api';
 import RoledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 interface AdministratorDashboardState {
@@ -29,7 +29,9 @@ class AdministratorDashboard extends React.Component {
   }
 
   private getMyData() {
-    api('/api/administrator/', 'get', {}, 'administrator')
+    const administratorId = getIdentity('administrator');
+
+    api('/api/administrator/' + administratorId, 'get', {}, 'administrator')
     .then((res: ApiResponse) => {
       if (res.status === "error" || res.status === "login") {
         this.setLogginState(false);
@@ -61,7 +63,11 @@ class AdministratorDashboard extends React.Component {
               <FontAwesomeIcon icon={ faHome } /> Administrator Dashboard
             </Card.Title>
 
-            ...
+            <ul>
+              <li><Link to="/administrator/dashboard/category/">Categories</Link></li>
+              <li><Link to="/administrator/dashboard/feature/">Features</Link></li>
+              <li><Link to="/administrator/dashboard/article/">Articles</Link></li>
+            </ul>
           </Card.Body>
         </Card>
       </Container>
