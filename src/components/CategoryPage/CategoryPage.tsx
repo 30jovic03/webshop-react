@@ -53,10 +53,10 @@ interface ArticleDto {
   articlePrices?: {
     price: number;
     createdAt: string;
-  }[],
+  }[];
   photos?: {
     imagePath: string;
-  }[],
+  }[];
 }
 
 export default class CategoryPage extends React.Component<CategoryPageProperties> {
@@ -130,7 +130,7 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
   render() {
     if (this.state.isUserLoggedIn === false) {
       return (
-        <Redirect to="user/login/" />
+        <Redirect to="/user/login/" />
       );
     }
 

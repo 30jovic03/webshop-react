@@ -177,7 +177,7 @@ export default class OrdersPage extends React.Component {
   render() {
     if (this.state.isUserLoggedIn === false) {
       return (
-        <Redirect to="user/login/" />
+        <Redirect to="/user/login/" />
       );
     }
 
