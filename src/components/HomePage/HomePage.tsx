@@ -25,10 +25,7 @@ class HomePage extends React.Component {
     };
   }
 
-  componentWillMount() {
-    this.getCategories();
-  }
-  componentWillUpdate() {
+  componentDidMount() {
     this.getCategories();
   }
 
@@ -77,7 +74,7 @@ class HomePage extends React.Component {
 
     return (
       <Container>
-        <RoledMainMenu role='visitor' />
+        <RoledMainMenu role='user' />
 
         <Card>
           <Card.Body>

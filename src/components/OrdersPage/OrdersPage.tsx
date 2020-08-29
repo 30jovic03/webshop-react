@@ -94,10 +94,6 @@ export default class OrdersPage extends React.Component {
     this.getOrders();
   }
 
-  componentDidUpdate() {
-    this.getOrders();
-  }
-
   private getOrders() {
     api('/api/user/cart/orders/', 'get', {})
     .then((res: ApiResponse) => {
