@@ -21,10 +21,7 @@ class AdministratorDashboard extends React.Component {
     };
   }
 
-  componentWillMount() {
-    this.getMyData();
-  }
-  componentWillUpdate() {
+  componentDidMount() {
     this.getMyData();
   }
 
