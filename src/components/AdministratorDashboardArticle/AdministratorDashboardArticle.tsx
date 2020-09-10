@@ -273,7 +273,7 @@ class AdministratorDashboardArticle extends React.Component {
         this.setLogginState(false);
         return;
       }
-      console.log(res.data);
+      
       this.putArticlesInState(res.data);
     });
   }
